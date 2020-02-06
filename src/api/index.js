@@ -23,3 +23,10 @@ export const weather = (city) => {
 	  })
 	})
 }
+
+export const reqAddCategory = ({parentId, categoryName}) => ajax('/manage/category/add', 'POST', {parentId, categoryName})
+
+export const reqUpdateCategory = ({categoryId, categoryName}) => ajax('/manage/category/update', 'POST', {categoryId, categoryName})
+
+
+export const reqCategoryList = (parentId) => ajax('/manage/category/list', 'GET', {parentId: parentId})
