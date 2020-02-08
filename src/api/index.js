@@ -6,10 +6,24 @@ import ajax from './ajax'
 import jsonp from 'jsonp'
 import { message } from 'antd'
 
+/**
+ * @name 登陆
+ * @param {username} string
+ * @param {password} string
+ * @return
+ */
 export const signIn = ({username, password}) => ajax('/login', 'POST', {username, password})
-
+/**
+ * @name 添加用户
+ * @param {user} object
+ * @return
+ */
 export const addUser = (user) => ajax('/manage/user/add', 'POST', user)
-
+/**
+ * @name 获取天气信息
+ * @param {city} string
+ * @return object
+ */
 export const weather = (city) => {
 	return new Promise((resolve, reject) => {
 		const url = `http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`
@@ -23,10 +37,71 @@ export const weather = (city) => {
 	  })
 	})
 }
-
+/**
+ * @name 添加类别
+ * @param {parentId} string
+ * @param {categoryName} string
+ * @return 
+ */
 export const reqAddCategory = ({parentId, categoryName}) => ajax('/manage/category/add', 'POST', {parentId, categoryName})
-
+/**
+ * @name 更新类别
+ * @param {categoryId} string
+ * @param {categoryName} string
+ * @return
+ */
 export const reqUpdateCategory = ({categoryId, categoryName}) => ajax('/manage/category/update', 'POST', {categoryId, categoryName})
-
-
-export const reqCategoryList = (parentId) => ajax('/manage/category/list', 'GET', {parentId: parentId})
+/**
+ * @name 获取一级分类/二级分类列表
+ * @param {parentId} string
+ * @return array
+ */
+export const reqCategoryList = (parentId) => ajax('/manage/category/list', 'GET', {parentId})
+/**
+ * @name 根据categoryId获取分类信息
+ * @param {categoryId} string
+ * @return category_object
+ */
+export const reqGetCategroy = (categoryId) => ajax('/manage/category/info', 'GET', {categoryId})
+/**
+ * @name 获取商品管理列表
+ * @param {pageNum} number
+ * @param {pageSize} number
+ * @return array
+ */
+export const reqProductList = ({pageNum, pageSize}) => ajax('/manage/product/list', 'GET', {pageNum, pageSize})
+/**
+ * @name 根据ID/Name搜索产品分页列表
+ * @param {pageNum} number
+ * @param {pageSize} number
+ * @param {productName} string
+ * @param {productDesc} string
+ * @return array
+ */
+export const reqSearchProduct = ({pageNum, pageSize, searchName, searchType}) => ajax('/manage/product/search', 'GET', {
+	pageNum, 
+	pageSize, 
+	[searchType]: searchName
+})
+/**
+ * @name 添加商品
+ * @param {categoryId}  string  分类ID
+ * @param {pCategoryId} string  父分类ID
+ * @param {name}        string  商品名称
+ * @param {desc}        string  商品描述
+ * @param {price}       string  商品价格
+ * @param {detail}      string  商品详情
+ * @param {imgs}        array   商品图片名数组
+ */
+export const reqAndOrUpdate = (product) => ajax(`/manage/product/${product._id ? 'update' : 'add'}`, 'POST', product)
+/**
+ * @name 更新商品状态：上架/下线
+ * @param {productId} string
+ * @param {status} number
+ */
+export const reqUpdateStatus = ({productId, status}) => ajax('/manage/product/updateStatus', 'POST', {productId, status})
+/**
+ * @name 删除图片
+ * @param {name} string
+ */
+export const reqDeleteImg = (name) => ajax('/manage/img/delete', 'POST', {name})

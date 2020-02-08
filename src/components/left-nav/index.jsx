@@ -22,7 +22,7 @@ class LeftNav extends Component {
 					</Menu.Item>
 				)
 			} else {
-				const current_item = item.children.find(c_item => c_item.to === this.props.location.pathname)
+				const current_item = item.children.find(c_item => this.props.location.pathname.indexOf(c_item.to) === 0)
 				if (current_item) {
 					this.openKeys = item.to
 				}
@@ -48,8 +48,12 @@ class LeftNav extends Component {
 	}
 
 	render () {
-		const pathname = [this.props.location.pathname]
+		let pathname = this.props.location.pathname
+		if (pathname.indexOf('/product') === 0) {
+      pathname = '/product'
+		}
 		const openKeys = [this.openKeys]
+
 		return (
 			<div className="left-nav">
 				<Link to="/" className="left-nav-header">
@@ -58,7 +62,7 @@ class LeftNav extends Component {
 				</Link>
 				<div className="left-nav-menu">
 					<Menu
-						selectedKeys={pathname}
+						selectedKeys={[pathname]}
 						defaultOpenKeys={openKeys}
 						mode="inline"
 						theme="dark"
