@@ -2,7 +2,8 @@ const MENU_LIST = [
 	{
 		title: "首页",
 		icon: "home",
-		to: "/home"
+		to: "/home",
+    isPublic: true
 	},
 	{
 		title: "商品",

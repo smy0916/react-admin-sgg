@@ -4,6 +4,7 @@ import { reqCategoryList, reqAddCategory, reqUpdateCategory } from '../../api/in
 import LinkButton from '../../components/link-button'
 import AddForm from './add-form'
 import UpdateFrom from './update-form'
+import { PAGE_SIZE } from '../../utils/contans'
 
 export default class Category extends Component {
 	state = {
@@ -13,7 +14,7 @@ export default class Category extends Component {
 		parentId: '0',
 		parentName: '',
 		modal_status: 0, // 0:都不显示,1:显示添加,2:显示更新
-		current_category: null
+		current_category: null,
 	}
 
 	initColumns = () => {
@@ -158,7 +159,7 @@ export default class Category extends Component {
 						bordered
 						dataSource={parentId === '0' ? categorys : sub_categorys}
 						columns={this.columns}
-						pagination={{ defaultPageSize: 5, showQuickJumper: true }}
+						pagination={{pageSize:PAGE_SIZE, showQuickJumper:true}}
 					/>
 				</Card>
 				<Modal

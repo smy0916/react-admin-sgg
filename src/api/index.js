@@ -14,12 +14,6 @@ import { message } from 'antd'
  */
 export const signIn = ({username, password}) => ajax('/login', 'POST', {username, password})
 /**
- * @name 添加用户
- * @param {user} object
- * @return
- */
-export const addUser = (user) => ajax('/manage/user/add', 'POST', user)
-/**
  * @name 获取天气信息
  * @param {city} string
  * @return object
@@ -105,3 +99,32 @@ export const reqUpdateStatus = ({productId, status}) => ajax('/manage/product/up
  * @param {name} string
  */
 export const reqDeleteImg = (name) => ajax('/manage/img/delete', 'POST', {name})
+/**
+ * @name 获取用户列表
+ */
+export const reqGetUsers = () => ajax('/manage/user/list', 'GET')
+/**
+ * @name 添加用户/更新用户
+ * @param {user} object
+ * @return
+ */
+export const reqAddUpdateUser = (user) => ajax(`/manage/user/${user._id ? 'update' : 'add'}`, 'POST', user)
+/**
+ * @name 删除用户
+ * @param {userId} string
+ */
+export const reqDeleteUser = (userId) => ajax('manage/user/delete', 'POST',{userId})
+/**
+ * @name 获取角色列表
+ */
+export const reqGetRoles = () => ajax('/manage/role/list', 'GET')
+/**
+ * @name 添加角色
+ * @param {role} object
+ */
+export const reqAddRole = (roleName) => ajax('/manage/role/add', 'POST', {roleName})
+/**
+ * @name 更新角色（给角色权限）
+ * @param {role} object
+ */
+export const reqUpdateRole = (role) => ajax('/manage/role/update', 'POST', role)

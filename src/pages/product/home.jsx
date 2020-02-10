@@ -10,14 +10,13 @@ import {
 } from 'antd'
 import LinkButton from '../../components/link-button'
 import { reqProductList, reqSearchProduct, reqUpdateStatus } from  '../../api/index'
+import { PAGE_SIZE } from '../../utils/contans'
 const {Option} = Select 
 
 export default class ProductHome extends Component {
 	state = {
 		total: 0,
 		product_list: [],
-		pageNum: 1,
-		pageSize: 2,
 		loading: false,
 		searchName: '',
 		searchType: 'productName',
@@ -70,12 +69,12 @@ export default class ProductHome extends Component {
 	getProductList = async(pageNum) => {
 		this.setState({loading: true})
 		this.pageNum = pageNum
-		const { pageSize, searchName, searchType } = this.state
+		const { searchName, searchType } = this.state
 		let result
 		if (searchName) {
-      result = await reqSearchProduct({pageNum, pageSize, searchName, searchType})
+      result = await reqSearchProduct({pageNum, pageSize:PAGE_SIZE, searchName, searchType})
 		} else {
-			result = await reqProductList({pageNum, pageSize})
+			result = await reqProductList({pageNum, pageSize:PAGE_SIZE})
 		}
 		this.setState({loading: false})
 		if (result.status === 0) {
@@ -105,7 +104,7 @@ export default class ProductHome extends Component {
 	}
 
 	render () {
-		const { product_list, total, pageSize, loading, searchType, searchName } = this.state
+		const { product_list, total, loading, searchType, searchName } = this.state
 		const title = (
 		  <div>
 				<Select 
@@ -137,9 +136,10 @@ export default class ProductHome extends Component {
 						loading={loading}
             pagination={{
 							total, 
-							defaultPageSize: pageSize, 
+							defaultPageSize: PAGE_SIZE, 
 							showQuickJumper: true, 
-							onChange: this.getProductList
+							onChange: this.getProductList,
+              current: this.pageNum  
 					  }}
 					/>
 				</Card>
