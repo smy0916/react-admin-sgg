@@ -8,12 +8,12 @@ import {
 	Modal,
 	message
 } from 'antd'
+import { connect } from 'react-redux'
 import { reqGetRoles, reqAddRole, reqUpdateRole } from '../../api/index'
 import TreeData from './tree'
-import memoryUtils from '../../utils/memoryUtils'
-import storageUtils from '../../utils/storageUtils'
 import { formatTime } from '../../utils/commonTool'
 import { PAGE_SIZE } from '../../utils/contans'
+import { signOut } from '../../redux/actions'
 
 const Item = Form.Item
 class Role extends Component {
@@ -93,7 +93,7 @@ class Role extends Component {
 		this.cancelSetRole()
 		const menus = this.role_form.current.getMenus() 
 		const { role } = this.state
-		const auth_name = memoryUtils.user.username
+		const auth_name = this.props.user.username
 		const auth_time = (new Date()).getTime()
 		const _role = {
 			_id: role._id,
@@ -105,10 +105,8 @@ class Role extends Component {
 		if (result.status === 0) {
 			message.success('角色设置成功!')
 			this.getRoleList()
-			if (_role._id === memoryUtils.user.role_id) {
-				memoryUtils.user = {}
-				storageUtils.removeUser()
-				this.props.history.replace('/signin')
+			if (_role._id === this.props.user.role_id) {
+				signOut()
 			}
 		} else {
 			message.error('角色设置失败!')
@@ -212,4 +210,7 @@ class Role extends Component {
 	}
 }
 
-export default Form.create()(Role)
+export default connect(
+	state => ({user: state.user}),
+	{signOut}
+)(Form.create()(Role))

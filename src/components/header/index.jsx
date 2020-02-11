@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { signOut } from '../../redux/actions'
 import { weather } from '../../api/index'
 import { formatTime } from '../../utils/commonTool'
-import memoryUtils from '../../utils/memoryUtils'
-import storageUtils from '../../utils/storageUtils'
-import MENU_LIST from '../../config/menuConfig'
 import LinkButton from '../link-button'
 import { Modal } from 'antd'
 import './index.less'
@@ -31,20 +30,6 @@ class Header extends Component {
 		})
 	}
 
-	getTitle = () => {
-		const path = this.props.location.pathname
-		let title
-		MENU_LIST.forEach(item => {
-			if (item.to === path) {
-				title = item.title
-			} else if (item.children) {
-				const _item = item.children.find(cItem => path.indexOf(cItem.to) === 0)
-				if (_item) title = _item.title
-			}
-		})
-		return title
-	}
-
 	signOut = () => {
 		Modal.confirm({
 			title: '确认退出？',
@@ -52,9 +37,7 @@ class Header extends Component {
 			okText: '确认',
 			cancelText: '取消',
 			onOk: () => {
-				storageUtils.removeUser()
-			  memoryUtils.user = {}
-			  this.props.history.replace('/signin')
+				this.props.signOut()
 			}
 		})
 	}
@@ -70,8 +53,8 @@ class Header extends Component {
 
 	render () {
 		const { dayPictureUrl, weather_info, currentTime } = this.state
-		const username = memoryUtils.user.username
-		const title = this.getTitle()
+		const username = this.props.user.username
+		const title = this.props.headTitle
 		return (
 			<div className="header">
 				<div className="header-top">
@@ -91,4 +74,7 @@ class Header extends Component {
 	}
 }
 
-export default withRouter(Header)
+export default connect(
+	state => ({headTitle: state.headTitle, user: state.user}),
+	{signOut}
+)(withRouter(Header))

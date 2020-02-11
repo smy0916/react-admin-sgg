@@ -1,32 +1,19 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
 import './signIn.less'
 import logo from './images/logo.png'
-import { Form, Icon, Input, Button, message } from 'antd'
-import { signIn } from '../../api'
-import memoryUtils from '../../utils/memoryUtils'
-import storageUtils from '../../utils/storageUtils'
+import { Form, Icon, Input, Button } from 'antd'
+import { signIn } from '../../redux/actions'
 
 class SignIn extends React.Component {
 
 	handleSubmit = (e) => {
 		e.preventDefault()
-		// const form = this.props.form
-		// const values = form.getFieldsValue()
 		this.props.form.validateFields(async(err, values) => {
 			if (!err) {
 				const { username, password } = values
-				const response = await signIn({username, password})
-				const result = response
-				if (result.status === 0) {
-					message.success('登陆成功！')
-					const user = result.data
-					memoryUtils.user = user
-					storageUtils.saveUser(user)
-					this.props.history.replace('/')
-				} else {
-					message.error(result.msg)
-				}
+				this.props.signIn(username,password)
 			} else {
         console.log('校验失败')
 			}
@@ -50,7 +37,7 @@ class SignIn extends React.Component {
 	render () {
 		
 		// 如果用户已经登陆，自动跳转到 admin
-		const user = memoryUtils.user
+		const user = this.props.user
 		if (user && user._id) {
       return <Redirect to="/" />
 		}
@@ -64,6 +51,7 @@ class SignIn extends React.Component {
 					<h1>React项目：后台管理系统</h1>
 				</header>
 				<div className="sign-in-content">
+				  <div className={user.errorMsg ? 'error-msg show' : 'error-msg'}>{user.errorMsg}</div>
 					<h2>用户登录</h2>
 					<Form onSubmit={this.handleSubmit} >
 						<Form.Item>
@@ -105,4 +93,7 @@ class SignIn extends React.Component {
 }
 
 const WrapSignIn = Form.create()(SignIn)
-export default WrapSignIn
+export default connect(
+	state => ({user: state.user}),
+	{signIn} 
+)(WrapSignIn)
