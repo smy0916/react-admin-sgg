@@ -12,7 +12,7 @@ import { message } from 'antd'
  * @param {password} string
  * @return
  */
-export const signIn = ({username, password}) => ajax('/login', 'POST', {username, password})
+export const reqSignIn = ({username, password}) => ajax('/login', 'POST', {username, password})
 /**
  * @name 获取天气信息
  * @param {city} string
